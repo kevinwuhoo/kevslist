@@ -40,14 +40,14 @@ def index(feed_id):
 # updates all feeds, only called manually from the browser
 @app.route('/feeds/parse')
 def parse_feeds_endpoint():
-    return jsonify(parse_feeds())
+    return jsonify(parse_feeds(g.db))
 
 
-def parse_feeds():
+def parse_feeds(db):
     modified_feeds = {}
-    for feed in g.db.feeds.find():
+    for feed in db.feeds.find():
         feed_id = str(feed['_id'])
-        feed['num_modified'] = parse_feed(feed_id, feed['url'])
+        feed['num_modified'] = parse_feed(db, feed_id, feed['url'])
         feed['_id'] = feed_id
         modified_feeds[feed_id] = feed
 
@@ -59,10 +59,10 @@ def parse_feeds():
 def parse_feed_endpoint(feed_id):
     feed_object_id = ObjectId(feed_id)
     feed = g.db.feeds.find_one({'_id': feed_object_id})
-    return jsonify(num_modified=parse_feed(feed_id, feed['url']))
+    return jsonify(num_modified=parse_feed(g.db, feed_id, feed['url']))
 
 
-def parse_feed(feed_id, url):
+def parse_feed(db, feed_id, url):
     rss = feedparser.parse(url)
 
     num_modified = 0
@@ -79,7 +79,7 @@ def parse_feed(feed_id, url):
             'parsed_at': datetime.datetime.now()
         }
 
-        num_modified += g.db.items.update_one(
+        num_modified += db.items.update_one(
             {'link': entry['link']},
             {
                 '$set': {'last_seen_at': datetime.datetime.now()},
