@@ -1,0 +1,42 @@
+extends 'layout.html.jade'
+block content
+  .row
+
+    // left nav with list of feeds, adds class if active
+    .col-md-2
+      ul.nav.nav-pills.nav-stacked
+        li(role="presentation" class=('active' if current_feed is none))
+          a(href='/') All
+        each feed in feeds
+          li(role="presentation" class=('active' if current_feed == feed['_id']|string))
+            a(href="/feed/#{feed['_id']}")= feed['name']
+
+    // grid of items, four items in each row
+    .col-md-10
+      each item in items
+        .col-md-3.item
+          a(href=item['link'], target='_blank')
+            img.img-responsive(src=item['picture'])
+            p
+              | !{item['title']}
+              | &#8212;&nbsp;
+              span.text-muted= item['posted_at'].strftime('%H:%M %m/%d')
+
+      // centered pagnation, 0 to total_pages
+      .row
+        .col-md-12.text-center
+          nav
+            ul.pagination.pagination-lg
+              if current_page > 0
+                li
+                  a(href="?page=#{current_page - 1}", aria-label='Previous')
+                    span(aria-hidden='true') «
+
+              each page in range(total_pages)
+                li(class=('active' if page == current_page))
+                  a(href="?page=#{page}")= page
+              if current_page != total_pages
+                li
+                  a(href="?page=#{current_page + 1}", aria-label='Next')
+                    span(aria-hidden='true') »
+endblock

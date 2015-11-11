@@ -1,0 +1,11 @@
+.u-cursor--pointer {
+  cursor: pointer;
+}
+
+.feeds-table td {
+  vertical-align: middle !important;
+}
+
+.item {
+  height: 400px;
+}

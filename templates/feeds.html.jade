@@ -1,0 +1,32 @@
+extends 'layout.html.jade'
+block content
+
+  // forms cant exist in tables, this form serves the top row of the table
+  // which allows creation of new feeds
+  form#feeds-form(action='/feeds', method='POST')
+
+  table.table.table-striped.js-feeds-table.feeds-table
+    thead
+      tr
+        th Name
+        th Url
+        th
+    tbody
+      tr
+        td
+          input.form-control(name='name', placeholder='Name', form='feeds-form')
+        td
+          input.form-control(name='url', placeholder='Url', form='feeds-form')
+        td
+          button.btn.btn-default(type='submit', form='feeds-form') Save
+
+      // lists existing feeds and edit/delete buttons
+      each feed in feeds
+        tr
+          td.js-feed-name(data-feed-id=feed['_id'])= feed['name']
+          td= feed['url']
+
+          td
+            i.js-feed-edit.fa.fa-pencil.u-cursor--pointer(data-feed-id=feed['_id'])
+            | &nbsp;&nbsp;&nbsp;&nbsp;
+            i.js-feed-delete.fa.fa-trash.u-cursor--pointer(data-feed-id=feed['_id'])
