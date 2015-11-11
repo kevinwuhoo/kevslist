@@ -134,7 +134,7 @@ def connect_mongo():
     else:
         client = pymongo.MongoClient()
         mongo = client
-        db = client.craigslist_rss_tracker
+        db = client.kevslist
 
     return mongo, db
 
