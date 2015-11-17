@@ -1,0 +1,17 @@
+{
+  "name": "Kevslist",
+  "repository": "https://github.com/kevinwuhoo/kevslist",
+  "success_url": "/",
+  "scripts": {
+    "postdeploy": "python manage.py create_indicies"
+  },
+  "env": {
+    "WEB_CONCURRENCY": {
+      "value": "3"
+    }
+  },
+  "addons": [
+    "scheduler:standard",
+    "mongolab:sandbox"
+  ]
+}
