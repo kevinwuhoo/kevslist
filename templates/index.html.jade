@@ -16,11 +16,32 @@ block content
       each item in items
         .col-md-3.item
           a(href=item['link'], target='_blank')
-            img.img-responsive(src=item['picture'])
-            p
-              | !{item['title']}
-              | &#8212;&nbsp;
-              span.text-muted= item['posted_at'].strftime('%H:%M %m/%d')
+            .item__image-wrapper.text-center
+              img.img-responsive.item__image(src=item['picture'])
+            p.item__title
+              | !{item['title_cleaned']}
+
+          .item__details
+            if item['price']
+              .text-muted
+                i.fa.fa-usd
+                | &nbsp;
+                = item['price']
+
+            if item['location']
+              .text-muted
+                i.fa.fa-location-arrow
+                | &nbsp;
+                = item['location']
+
+            .text-muted
+              i.fa.fa-clock-o(data-toggle='tooltip' title='Posted At')
+              | &nbsp;
+              = item['posted_at'].strftime('%H:%M %m/%d')
+            .text-muted
+              i.fa.fa-eye(data-toggle='tooltip' title='Last Seen At')
+              | &nbsp;
+              = item['last_seen_at'].strftime('%H:%M %m/%d')
 
       // centered pagnation, 0 to total_pages
       .row

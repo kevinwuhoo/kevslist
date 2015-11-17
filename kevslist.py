@@ -27,11 +27,34 @@ def index(feed_id):
     items = g.db.items.find(query).sort('posted_at', pymongo.DESCENDING).limit(items_per_page).skip(items_per_page * page)
     total_pages = math.ceil(g.db.items.count() / items_per_page)
 
+    parsed_items = []
+    for item in items:
+        title = item['title']
+        first_paren_index = title.rfind('(')
+        last_paren_index = title.rfind(')')
+        if first_paren_index > -1:
+            location = title[first_paren_index+1:last_paren_index]
+        else:
+            location = None
+
+        item['location'] = location
+
+        dollar_index = title.rfind('&#x0024;')
+        if dollar_index > -1:
+            price = title[dollar_index+8:]
+        else:
+            price = None
+
+        item['price'] = price
+        item['title_cleaned'] = title[:first_paren_index][:dollar_index].rstrip(' - ')
+
+        parsed_items.append(item)
+
     return render_template(
                'index.html.jade',
                 current_feed=feed_id,
                 feeds=feeds,
-                items=items,
+                items=parsed_items,
                 total_pages=total_pages,
                 current_page=page
             )

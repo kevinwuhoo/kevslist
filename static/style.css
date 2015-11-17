@@ -7,5 +7,28 @@
 }
 
 .item {
-  height: 400px;
+  height: 350px;
+  margin-bottom: 36px;
+}
+
+/* http://stackoverflow.com/a/23518465 */
+.item__image-wrapper {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 100%;
+}
+
+.item__image {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.item__title {
+  margin-top: 0.5em;
+}
+
+.item__details {
+  position: absolute;
+  bottom: 0;
 }
