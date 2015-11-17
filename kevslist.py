@@ -6,6 +6,8 @@ import datetime
 import time
 import math
 
+import urllib
+
 import os
 
 
@@ -119,9 +121,20 @@ def parse_feed(db, feed_id, url):
 @app.route('/feeds', methods=['GET', 'POST'])
 def feeds_rest():
     if request.method == 'POST':
+        url = request.form['url']
+
+        # ensure format=rss is in query params
+        scheme, netloc, path, query_string, fragment = urllib.parse.urlsplit(url)
+        query_params = urllib.parse.parse_qs(query_string)
+
+        query_params['format'] = ['rss']
+        new_query_string = urllib.parse.urlencode(query_params, doseq=True)
+
+        url = urllib.parse.urlunsplit((scheme, netloc, path, new_query_string, fragment))
+
         g.db.feeds.insert_one({
             'name': request.form['name'],
-            'url': request.form['url']
+            'url': url
         })
 
     return render_template('feeds.html.jade', feeds=g.db.feeds.find())
