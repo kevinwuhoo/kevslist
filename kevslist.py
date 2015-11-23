@@ -95,11 +95,15 @@ def parse_feed(db, feed_id, url):
     # for each item, add it to the collection if doesnt exist, otherwise
     # if exists, ensure feed_id in lists of feed_ids, always update last_seen
     for entry in rss.entries:
+
+        if 'enc_enclosure' in entry and 'resource' in entry['enc_enclosure']:
+            picture = entry['enc_enclosure']['resource']
+
         entry_attrs = {
             'title': entry['title'],
             'link': entry['link'],
             'description': entry['description'],
-            'picture': entry['enc_enclosure']['resource'],
+            'picture': picture,
             'posted_at': datetime.datetime.fromtimestamp(time.mktime(entry['date_parsed'])),
             'parsed_at': datetime.datetime.now()
         }
